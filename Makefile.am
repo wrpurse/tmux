@@ -13,51 +13,52 @@ dist-hook:
 	find $(distdir) -name .svn -type d|xargs rm -Rf
 
 # Preprocessor flags.
-CPPFLAGS += @XOPEN_DEFINES@ -DTMUX_CONF="\"$(sysconfdir)/tmux.conf\""
+AM_CPPFLAGS = @XOPEN_DEFINES@ -DTMUX_CONF="\"$(sysconfdir)/tmux.conf\""
+AM_CFLAGS = 
 
 # glibc as usual does things ass-backwards and hides useful things by default,
 # so everyone has to add this.
 if IS_GLIBC
-CFLAGS += -D_GNU_SOURCE
+AM_CFLAGS += -D_GNU_SOURCE
 endif
 
 # Set flags for gcc. gcc4 whines abouts silly stuff so it needs slightly
 # different flags.
 if IS_GCC
-CFLAGS += -std=gnu99
+AM_CFLAGS += -std=gnu99
 if IS_DEBUG
-CFLAGS += -O0 -g
-CFLAGS += -Wno-long-long -Wall -W -Wnested-externs -Wformat=2
-CFLAGS += -Wmissing-prototypes -Wstrict-prototypes -Wmissing-declarations
-CFLAGS += -Wwrite-strings -Wshadow -Wpointer-arith -Wsign-compare
-CFLAGS += -Wundef -Wbad-function-cast -Winline -Wcast-align
-CFLAGS += -Wdeclaration-after-statement
-CPPFLAGS += -DDEBUG
+AM_CFLAGS += -O0 -g
+AM_CFLAGS += -Wno-long-long -Wall -W -Wnested-externs -Wformat=2
+AM_CFLAGS += -Wmissing-prototypes -Wstrict-prototypes -Wmissing-declarations
+AM_CFLAGS += -Wwrite-strings -Wshadow -Wpointer-arith -Wsign-compare
+AM_CFLAGS += -Wundef -Wbad-function-cast -Winline -Wcast-align
+AM_CFLAGS += -Wdeclaration-after-statement
+AM_CPPFLAGS += -DDEBUG
 else
-CFLAGS += -O2
+AM_CFLAGS += -O2
 endif
 if IS_GCC4
-CPPFLAGS += -iquote. -I/usr/local/include
+AM_CPPFLAGS += -iquote. -I/usr/local/include
 if IS_DEBUG
-CFLAGS += -Wno-pointer-sign
+AM_CFLAGS += -Wno-pointer-sign
 endif
 else
-CPPFLAGS += -I. -I- -I/usr/local/include
+AM_CPPFLAGS += -I. -I- -I/usr/local/include
 endif
 endif
 
 # Set flags for Solaris.
 if IS_SUNOS
 if IS_GCC
-CPPFLAGS += -D_XPG6 -D__EXTENSIONS__ -D_POSIX_PTHREAD_SEMANTICS
+AM_CPPFLAGS += -D_XPG6 -D__EXTENSIONS__ -D_POSIX_PTHREAD_SEMANTICS
 else
-CPPFLAGS += -D_XPG4_2 -D__EXTENSIONS__ -D_POSIX_PTHREAD_SEMANTICS
+AM_CPPFLAGS += -D_XPG4_2 -D__EXTENSIONS__ -D_POSIX_PTHREAD_SEMANTICS
 endif
 endif
 
 # Set flags for Sun CC.
 if IS_SUNCC
-CFLAGS += -erroff=E_EMPTY_DECLARATION
+AM_CFLAGS += -erroff=E_EMPTY_DECLARATION
 endif
 
 # List of sources.
